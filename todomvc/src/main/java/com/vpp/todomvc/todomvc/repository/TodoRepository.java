@@ -1,5 +1,6 @@
 package com.vpp.todomvc.todomvc.repository;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import com.vpp.todomvc.todomvc.model.Status;
 import com.vpp.todomvc.todomvc.model.Todo;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -34,4 +35,17 @@ public interface TodoRepository extends JpaRepository<Todo, String> {
     @Query("UPDATE Todo t SET t.title = :title WHERE t.id = :id")
     @Transactional
     void updateTitle(@Param("title") String title, @Param("id") Long id);
+
+    @Modifying
+    @Query("UPDATE Todo t SET t.status = 'COMPLETE' WHERE t.id = :id")
+    @Transactional
+    void updateStatusToComplete(@Param("id") Long id);
+
+    @Modifying
+    @Query("UPDATE Todo t SET t.status = 'ACTIVE' WHERE t.id = :id")
+    @Transactional
+    void updateStatusToActive(@Param("id") Long id);
+
+
+
 }

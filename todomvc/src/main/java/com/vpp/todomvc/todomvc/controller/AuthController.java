@@ -1,8 +1,10 @@
 package com.vpp.todomvc.todomvc.controller;
 
+import com.vpp.todomvc.todomvc.model.AppUser;
+import com.vpp.todomvc.todomvc.model.UserCredentials;
 import com.vpp.todomvc.todomvc.repository.UserRepository;
 import com.vpp.todomvc.todomvc.security.JwtTokenServices;
-import org.springframework.data.authentication.UserCredentials;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -28,6 +30,9 @@ public class AuthController {
 
     private final JwtTokenServices jwtTokenServices;
 
+    @Autowired
+    private UserRepository r;
+
     public AuthController(AuthenticationManager authenticationManager, JwtTokenServices jwtTokenServices, UserRepository users) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenServices = jwtTokenServices;
@@ -35,6 +40,11 @@ public class AuthController {
 
     @PostMapping("/signin")
     public ResponseEntity signin(@RequestBody UserCredentials data) {
+        System.out.println(data.toString());
+        List<AppUser> a = r.findAll();
+        for (AppUser u : a) {
+            System.out.println(u);
+        }
         try {
             String username = data.getUsername();
             // authenticationManager.authenticate calls loadUserByUsername in CustomUserDetailsService
@@ -55,4 +65,6 @@ public class AuthController {
             throw new BadCredentialsException("Invalid username/password supplied");
         }
     }
+
+
 }

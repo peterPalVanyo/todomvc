@@ -2,9 +2,8 @@ package com.vpp.todomvc.todomvc.controller;
 
 import com.vpp.todomvc.todomvc.dao.TodoDaoDb;
 import com.vpp.todomvc.todomvc.model.Todo;
-import org.json.JSONArray;
+import com.vpp.todomvc.todomvc.service.TodoService;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,6 +11,10 @@ import java.util.List;
 
 @RestController
 public class TodoController {
+
+    @Autowired
+    TodoService todoService;
+
 
     @Autowired
     TodoDaoDb todoDaoDb;
@@ -25,19 +28,28 @@ public class TodoController {
         return SUCCESS;
     }
 
+     //List by id
     @PostMapping("/list")
-    public String list(@RequestParam("status") String status) throws JSONException {
-        List<Todo> daos = todoDaoDb.ofStatus(status);
-        JSONArray arr = new JSONArray();
-        for (Todo dao : daos) {
-            JSONObject jo = new JSONObject();
-            jo.put("id", dao.getId());
-            jo.put("title", dao.getTitle());
-            jo.put("completed", dao.isComplete());
-            arr.put(jo);
-        }
-        return arr.toString(2);
+    public List<Todo> listByStatus(@RequestParam("status") String status) {
+        return todoService.listByStatus(status);
     }
+
+//    @PostMapping("/list")
+//    public String list(@RequestParam("status") String status) {
+//        List<Todo> daos = todoDaoDb.ofStatus(status);
+//        JSONArray arr = new JSONArray();
+//        for (Todo dao : daos) {
+//            JSONObject jo = new JSONObject();
+//            jo.put("id", dao.getId());
+//            jo.put("title", dao.getTitle());
+//            jo.put("completed", dao.isComplete());
+//            arr.put(jo);
+//        }
+//        return arr.toString(2);
+//        return daos.toString();
+//    }
+
+
 
     @DeleteMapping("/todos/completed")
     public String deleteCompleted() {
@@ -69,8 +81,8 @@ public class TodoController {
         return todoDaoDb.find(id).getTitle();
     }
 
-    @PutMapping("/todos/:id/toggle_status")
-    public String toggleStatusById(@RequestParam("status") String status, @RequestParam("id") Long id) {
+    @PutMapping("/todos/{id}/toggle_status")
+    public String toggleStatusById(@RequestParam("status") String status, @PathVariable("id") Long id) {
         boolean completed = status.equals("true");
         todoDaoDb.toggleStatus(id, completed);
         return SUCCESS;

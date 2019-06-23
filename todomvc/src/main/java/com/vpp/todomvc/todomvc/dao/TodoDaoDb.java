@@ -1,5 +1,6 @@
 package com.vpp.todomvc.todomvc.dao;
 
+import com.vpp.todomvc.todomvc.model.Status;
 import com.vpp.todomvc.todomvc.model.Todo;
 import com.vpp.todomvc.todomvc.model.TodoComparator;
 import com.vpp.todomvc.todomvc.repository.TodoRepository;
@@ -16,7 +17,8 @@ public class TodoDaoDb {
     @Autowired
     TodoRepository todoRepository;
 
-    public void add(Todo todo) {
+    public void add(Todo todo)
+    {
         todoRepository.save(todo);
     }
 
@@ -47,15 +49,26 @@ public class TodoDaoDb {
     }
 
     public void removeCompleted() {
-
+        List<Todo> completed = ofStatus("COMPLETE");
+        for (Todo todo : completed) {
+            remove(todo.getId());
+        }
     }
 
     public void toggleStatus(Long id, boolean isComplete) {
+        Todo t = find(id);
+        if (t != null) {
+            if (t.isComplete()) todoRepository.updateStatusToActive(t.getId());
+            else todoRepository.updateStatusToComplete(t.getId());
+        }
 
     }
 
     public void toggleAll(boolean complete) {
-
+        List<Todo> all = all();
+        for (Todo todo : all) {
+            if (!todo.isComplete()) todoRepository.updateStatusToComplete(todo.getId());
+        }
     }
 
     public List<Todo> all() {
