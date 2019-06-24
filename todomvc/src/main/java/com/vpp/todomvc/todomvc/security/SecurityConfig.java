@@ -40,12 +40,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                     .authorizeRequests()
-                    .antMatchers("/**").permitAll() // allowed by anyone
+//                .antMatchers("/auth/signin").permitAll() // allowed by anyone
+//                .antMatchers("/**").permitAll() // allowed by anyone
+//                .antMatchers(HttpMethod.POST, "/list").permitAll() // allowed only when signed in
 
-                    .antMatchers("/auth/signin").hasRole("ADMIN") // allowed by anyone
-                    .antMatchers(HttpMethod.POST, "/list").authenticated() // allowed only when signed in
-    //                .antMatchers("/**").hasRole("ADMIN") // allowed if signed in with ADMIN role
-    //                .anyRequest().denyAll() // anything else is denied
+                //should be:
+                .antMatchers("/auth/signin").permitAll()
+                .antMatchers("/signin").permitAll()
+                .antMatchers(HttpMethod.POST, "/list").permitAll()
+//                .antMatchers("/**").hasRole("ADMIN")
+//                .anyRequest().hasRole("ADMIN")
+
+
                 .and()
                 .addFilterBefore(new JwtTokenFilter(jwtTokenServices), UsernamePasswordAuthenticationFilter.class);
     }

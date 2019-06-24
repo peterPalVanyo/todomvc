@@ -40,11 +40,11 @@ public class AuthController {
 
     @PostMapping("/signin")
     public ResponseEntity signin(@RequestBody UserCredentials data) {
-        System.out.println(data.toString());
-        List<AppUser> a = r.findAll();
-        for (AppUser u : a) {
-            System.out.println(u);
-        }
+//        System.out.println(data.toString());
+//        List<AppUser> a = r.findAll();
+//        for (AppUser u : a) {
+//            System.out.println(u);
+//        }
         try {
             String username = data.getUsername();
             // authenticationManager.authenticate calls loadUserByUsername in CustomUserDetailsService

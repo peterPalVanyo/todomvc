@@ -23,24 +23,24 @@ public class CustomUserDetailsService implements UserDetailsService {
     /**
      * Loads the user from the DB and converts it to Spring Security's internal User object
      */
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        AppUser user = users.findByUsername(username);
-        if (user == null){
-        throw( new UsernameNotFoundException("Username: " + username + " not found"));
-        }
-
-        return new User(user.getUsername(), user.getPassword(),
-                user.getRoles().stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
-    }
-
 //    @Override
 //    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-//        AppUser user = users.findByUsername(username)
-//                .orElseThrow(() -> new UsernameNotFoundException("Username: " + username + " not found"));
+//        AppUser user = users.findByUsername(username);
+//        if (user == null){
+//        throw( new UsernameNotFoundException("Username: " + username + " not found"));
+//        }
 //
 //        return new User(user.getUsername(), user.getPassword(),
 //                user.getRoles().stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
 //    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        AppUser user = users.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Username: " + username + " not found"));
+
+        return new User(user.getUsername(), user.getPassword(),
+                user.getRoles().stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+    }
 
 }

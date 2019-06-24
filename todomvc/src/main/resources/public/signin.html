@@ -6,7 +6,40 @@
 </head>
 <body>
 
-    <p>hello</p>
+
+
+<form id="myForm">
+    <input type="text" name="username">
+    <input type="text" name="password">
+    <button id="login">login</button>
+</form>
+
+
+
+<script>
+
+    document.getElementById('login').addEventListener('click', evt => {
+        evt.preventDefault();
+        let data = {
+            username: document.getElementsByName("username")[0].value,
+            password: document.getElementsByName("password")[0].value,
+        }
+        let jsonData = JSON.stringify(data);
+
+        fetch("/auth/signin", {
+            method: 'POST', // or 'PUT'
+            body: jsonData, // data can be string or {object}!
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(res => res.json())
+            .then(response => {
+                localStorage.setItem('jwt_token', response.token);
+                window.location.replace("/");
+            })
+            .catch(error => console.error('Error:', error));
+    })
+</script>
 
 </body>
 </html>
