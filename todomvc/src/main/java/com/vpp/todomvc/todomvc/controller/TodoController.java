@@ -4,6 +4,7 @@ import com.vpp.todomvc.todomvc.dao.TodoDaoDb;
 import com.vpp.todomvc.todomvc.model.Todo;
 import com.vpp.todomvc.todomvc.service.TodoService;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,10 +24,17 @@ public class TodoController {
 
     @PostMapping("/addTodo")
     public String addTodo(@RequestParam("todo-title") String todoTitle) {
+        System.out.println(todoTitle);
         Todo newTodo = Todo.create(todoTitle);
         todoDaoDb.add(newTodo);
         return SUCCESS;
     }
+
+//    @PostMapping("/addTodo")
+//    public String addTodo() {
+//        System.out.println("addTodoCheck");
+//        return SUCCESS;
+//    }
 
      //List by id
     @PostMapping("/list")
@@ -86,6 +94,14 @@ public class TodoController {
         boolean completed = status.equals("true");
         todoDaoDb.toggleStatus(id, completed);
         return SUCCESS;
+    }
+
+    @RequestMapping(value = "/test", method = RequestMethod.GET, produces = "application/jason")
+    @ResponseBody
+    public String securityTest() throws JSONException {
+        return new JSONObject()
+                .put("message", "this is private")
+                .toString();
     }
 
 }
